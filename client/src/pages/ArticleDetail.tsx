@@ -1,6 +1,5 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useLocation } from 'wouter';
-import { useQuery } from '@tanstack/react-query';
 import { BlogPostWithTag } from '@shared/schema';
 import { Badge } from "@/components/ui/badge";
 import { format } from 'date-fns';
@@ -12,17 +11,38 @@ const ArticleDetail: React.FC = () => {
   const [, setLocation] = useLocation();
   const id = parseInt(params.id);
   
-  const { data: post, isLoading, isError } = useQuery<BlogPostWithTag>({
-    queryKey: ['/api/posts', id],
-    enabled: !isNaN(id),
-    // Add debugging to see what's coming back from the API
-    onSuccess: (data) => {
-      console.log("Received post data:", data);
-    },
-    onError: (error) => {
-      console.error("Error fetching post:", error);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<boolean>(false);
+  const [post, setPost] = useState<BlogPostWithTag | null>(null);
+  
+  useEffect(() => {
+    if (isNaN(id)) {
+      setLoading(false);
+      setError(true);
+      return;
     }
-  });
+    
+    const fetchPost = async () => {
+      setLoading(true);
+      try {
+        const response = await fetch(`/api/posts/${id}`);
+        if (!response.ok) {
+          throw new Error(`Error fetching post: ${response.status}`);
+        }
+        const data = await response.json();
+        console.log("Received post data:", data);
+        setPost(data);
+        setError(false);
+      } catch (error) {
+        console.error("Error fetching post:", error);
+        setError(true);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchPost();
+  }, [id]);
   
   if (isNaN(id)) {
     return (
@@ -41,7 +61,7 @@ const ArticleDetail: React.FC = () => {
     );
   }
   
-  if (isLoading) {
+  if (loading) {
     return (
       <div className="container mx-auto px-4 py-12">
         <div className="bg-gray-200 h-[500px] w-full rounded-xl animate-pulse mb-8"></div>
@@ -53,7 +73,7 @@ const ArticleDetail: React.FC = () => {
     );
   }
   
-  if (isError || !post) {
+  if (error || !post) {
     return (
       <div className="container mx-auto px-4 py-12">
         <div className="bg-white p-8 rounded-lg shadow-md text-center">
@@ -121,7 +141,7 @@ const ArticleDetail: React.FC = () => {
           </div>
           
           <div className="prose prose-lg max-w-none">
-            {post.content?.split('\n\n').map((paragraph, index) => (
+            {post.content?.split('\n\n').map((paragraph: string, index: number) => (
               <p key={index} className="mb-6">{paragraph}</p>
             )) || <p>No content available</p>}
           </div>
