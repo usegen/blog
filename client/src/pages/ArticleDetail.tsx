@@ -15,6 +15,13 @@ const ArticleDetail: React.FC = () => {
   const { data: post, isLoading, isError } = useQuery<BlogPostWithTag>({
     queryKey: ['/api/posts', id],
     enabled: !isNaN(id),
+    // Add debugging to see what's coming back from the API
+    onSuccess: (data) => {
+      console.log("Received post data:", data);
+    },
+    onError: (error) => {
+      console.error("Error fetching post:", error);
+    }
   });
   
   if (isNaN(id)) {
@@ -63,7 +70,15 @@ const ArticleDetail: React.FC = () => {
     );
   }
   
-  const formattedDate = format(new Date(post.date), 'MMMM d, yyyy');
+  // Safely format the date, handling it as a string if it's not already a Date object
+  let formattedDate;
+  try {
+    // Try to format the date whether it's a Date object or a string
+    formattedDate = format(new Date(post.date), 'MMMM d, yyyy');
+  } catch (error) {
+    // Fallback to displaying the date as-is if there's a formatting error
+    formattedDate = typeof post.date === 'string' ? post.date : 'Unknown date';
+  }
   
   return (
     <article className="pt-8 pb-16">
@@ -87,7 +102,7 @@ const ArticleDetail: React.FC = () => {
         
         <div className="max-w-3xl mx-auto">
           <Badge className="bg-accent text-primary mb-4">
-            {post.tag.name}
+            {post.tag?.name || 'Uncategorized'}
           </Badge>
           
           <h1 className="font-display text-3xl md:text-4xl lg:text-5xl font-bold text-primary mb-4">
@@ -106,9 +121,9 @@ const ArticleDetail: React.FC = () => {
           </div>
           
           <div className="prose prose-lg max-w-none">
-            {post.content.split('\n\n').map((paragraph, index) => (
+            {post.content?.split('\n\n').map((paragraph, index) => (
               <p key={index} className="mb-6">{paragraph}</p>
-            ))}
+            )) || <p>No content available</p>}
           </div>
         </div>
       </div>

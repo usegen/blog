@@ -10,7 +10,15 @@ interface BlogPostCardProps {
 }
 
 const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
-  const formattedDate = format(new Date(post.date), 'MMM d, yyyy');
+  // Safely format the date, handling it as a string if it's not already a Date object
+  let formattedDate;
+  try {
+    // Try to format the date whether it's a Date object or a string
+    formattedDate = format(new Date(post.date), 'MMM d, yyyy');
+  } catch (error) {
+    // Fallback to displaying the date as-is if there's a formatting error
+    formattedDate = typeof post.date === 'string' ? post.date : 'Unknown date';
+  }
 
   return (
     <Link href={`/article/${post.id}`}>
@@ -23,7 +31,7 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
           />
           <div className="absolute top-4 left-4">
             <Badge variant="secondary" className="bg-accent text-primary px-3 py-1 rounded-full text-xs font-semibold">
-              {post.tag.name}
+              {post.tag?.name || 'Uncategorized'}
             </Badge>
           </div>
         </div>
