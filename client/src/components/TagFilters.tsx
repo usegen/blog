@@ -4,21 +4,17 @@ import { Tag } from '@shared/schema';
 import { Button } from "@/components/ui/button";
 
 interface TagFiltersProps {
-  selectedTagId: number | null;
-  onTagSelect: (tagId: number | null) => void;
+  selectedTagIds: number[];
+  onTagSelect: (tagId: number) => void;
 }
 
-const TagFilters: React.FC<TagFiltersProps> = ({ selectedTagId, onTagSelect }) => {
+const TagFilters: React.FC<TagFiltersProps> = ({ selectedTagIds, onTagSelect }) => {
   const { data: tags, isLoading } = useQuery<Tag[]>({
     queryKey: ['/api/tags'],
   });
 
   const handleTagClick = (tagId: number) => {
-    if (selectedTagId === tagId) {
-      onTagSelect(null); // Deselect if already selected
-    } else {
-      onTagSelect(tagId); // Select the new tag
-    }
+    onTagSelect(tagId); // Toggle the tag in the parent component
   };
 
   if (isLoading) {
@@ -40,21 +36,24 @@ const TagFilters: React.FC<TagFiltersProps> = ({ selectedTagId, onTagSelect }) =
   return (
     <div className="overflow-x-auto pb-2">
       <div className="flex flex-wrap justify-center gap-2">
-        {tags.map((tag) => (
-          <Button
-            key={tag.id}
-            variant="outline"
-            className={`tag-pill whitespace-nowrap px-4 py-2 rounded-full border border-primary font-semibold text-sm transition-colors duration-200 shadow-sm hover:shadow-md ${
-              selectedTagId === tag.id 
-                ? 'bg-primary text-white' 
-                : 'bg-white text-primary hover:bg-primary hover:text-white'
-            }`}
-            onClick={() => handleTagClick(tag.id)}
-          >
-            <span className="mr-1"><i className={`fas ${tag.icon}`}></i></span>
-            {tag.name}
-          </Button>
-        ))}
+        {tags.map((tag) => {
+          const isSelected = selectedTagIds.includes(tag.id);
+          return (
+            <Button
+              key={tag.id}
+              variant="outline"
+              className={`tag-pill whitespace-nowrap px-4 py-2 rounded-full border border-primary font-semibold text-sm transition-colors duration-200 shadow-sm hover:shadow-md ${
+                isSelected 
+                  ? 'bg-primary text-white' 
+                  : 'bg-white text-primary hover:bg-primary hover:text-white'
+              }`}
+              onClick={() => handleTagClick(tag.id)}
+            >
+              <span className="mr-1"><i className={`fas ${tag.icon}`}></i></span>
+              {tag.name}
+            </Button>
+          );
+        })}
       </div>
     </div>
   );

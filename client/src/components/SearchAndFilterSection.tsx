@@ -5,14 +5,14 @@ import TagFilters from './TagFilters';
 interface SearchAndFilterSectionProps {
   searchQuery: string;
   onSearchChange: (query: string) => void;
-  selectedTagId: number | null;
-  onTagSelect: (tagId: number | null) => void;
+  selectedTagIds: number[];
+  onTagSelect: (tagId: number) => void;
 }
 
 const SearchAndFilterSection: React.FC<SearchAndFilterSectionProps> = ({
   searchQuery,
   onSearchChange,
-  selectedTagId,
+  selectedTagIds,
   onTagSelect
 }) => {
   return (
@@ -29,7 +29,7 @@ const SearchAndFilterSection: React.FC<SearchAndFilterSectionProps> = ({
         <div className="max-w-3xl mx-auto">
           <SearchBox value={searchQuery} onChange={onSearchChange} />
           <div className="mt-8">
-            <TagFilters selectedTagId={selectedTagId} onTagSelect={onTagSelect} />
+            <TagFilters selectedTagIds={selectedTagIds} onTagSelect={onTagSelect} />
           </div>
         </div>
       </div>
