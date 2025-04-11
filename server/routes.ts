@@ -20,27 +20,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Get a single blog post by ID
-  app.get("/api/posts/:id", async (req, res) => {
-    try {
-      const id = parseInt(req.params.id);
-      if (isNaN(id)) {
-        return res.status(400).json({ message: "Invalid post ID" });
-      }
-
-      const post = await storage.getBlogPostById(id);
-      if (!post) {
-        return res.status(404).json({ message: "Post not found" });
-      }
-
-      res.json(post);
-    } catch (error) {
-      console.error("Error fetching blog post:", error);
-      res.status(500).json({ message: "Failed to fetch blog post" });
-    }
-  });
-
-  // Get featured blog post
+  // Get featured blog post - this must come before the ":id" route to prevent conflicts
   app.get("/api/posts/featured", async (req, res) => {
     try {
       const featuredPost = await storage.getFeaturedBlogPost();
@@ -80,6 +60,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error filtering blog posts by tag:", error);
       res.status(500).json({ message: "Failed to filter blog posts by tag" });
+    }
+  });
+  
+  // Get a single blog post by ID - this must come after all other specific post routes
+  app.get("/api/posts/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid post ID" });
+      }
+
+      const post = await storage.getBlogPostById(id);
+      if (!post) {
+        return res.status(404).json({ message: "Post not found" });
+      }
+
+      res.json(post);
+    } catch (error) {
+      console.error("Error fetching blog post:", error);
+      res.status(500).json({ message: "Failed to fetch blog post" });
     }
   });
 

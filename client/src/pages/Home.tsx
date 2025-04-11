@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import HeroSection from '@/components/HeroSection';
+import SearchAndFilterSection from '@/components/SearchAndFilterSection';
 import BlogPostGrid from '@/components/BlogPostGrid';
 import Newsletter from '@/components/Newsletter';
 import { useQuery } from '@tanstack/react-query';
@@ -50,7 +51,8 @@ const Home: React.FC = () => {
 
   return (
     <>
-      <HeroSection 
+      <HeroSection />
+      <SearchAndFilterSection 
         searchQuery={searchQuery} 
         onSearchChange={setSearchQuery} 
         selectedTagId={selectedTagId} 

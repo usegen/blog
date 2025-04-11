@@ -23,8 +23,8 @@ const TagFilters: React.FC<TagFiltersProps> = ({ selectedTagId, onTagSelect }) =
 
   if (isLoading) {
     return (
-      <div className="overflow-x-auto pb-4 mb-4">
-        <div className="flex space-x-3">
+      <div className="overflow-x-auto pb-2">
+        <div className="flex flex-wrap justify-center gap-2">
           {[1, 2, 3, 4, 5].map(i => (
             <div key={i} className="h-10 w-24 rounded-full bg-gray-200 animate-pulse"></div>
           ))}
@@ -38,8 +38,8 @@ const TagFilters: React.FC<TagFiltersProps> = ({ selectedTagId, onTagSelect }) =
   }
 
   return (
-    <div className="overflow-x-auto pb-4 mb-4">
-      <div className="flex space-x-3">
+    <div className="overflow-x-auto pb-2">
+      <div className="flex flex-wrap justify-center gap-2">
         {tags.map((tag) => (
           <Button
             key={tag.id}

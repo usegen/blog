@@ -1,22 +1,8 @@
 import React from 'react';
-import SearchBox from './SearchBox';
-import TagFilters from './TagFilters';
 import { useQuery } from '@tanstack/react-query';
 import { BlogPostWithTag } from '@shared/schema';
 
-interface HeroSectionProps {
-  searchQuery: string;
-  onSearchChange: (query: string) => void;
-  selectedTagId: number | null;
-  onTagSelect: (tagId: number | null) => void;
-}
-
-const HeroSection: React.FC<HeroSectionProps> = ({ 
-  searchQuery, 
-  onSearchChange, 
-  selectedTagId, 
-  onTagSelect 
-}) => {
+const HeroSection: React.FC = () => {
   const { data: featuredPost, isLoading } = useQuery<BlogPostWithTag>({
     queryKey: ['/api/posts/featured'],
   });
@@ -24,21 +10,17 @@ const HeroSection: React.FC<HeroSectionProps> = ({
   return (
     <section className="hero-section relative overflow-hidden">
       <div className="container mx-auto py-16 px-4 md:py-24 lg:py-32">
+        <div className="text-center mb-12">
+          <h1 className="font-display font-black text-4xl md:text-5xl lg:text-6xl text-primary leading-tight mb-6">
+            Discover Romania <span className="text-secondary">With Me</span>
+          </h1>
+          <p className="text-lg md:text-xl mb-8 max-w-2xl mx-auto text-gray-700">
+            Explore the hidden gems, breathtaking landscapes, and rich cultural heritage of Romania through my personal journey.
+          </p>
+        </div>
+        
         <div className="flex flex-col md:flex-row items-center">
           <div className="w-full md:w-1/2 mb-10 md:mb-0 z-10">
-            <h1 className="font-display font-black text-4xl md:text-5xl lg:text-6xl text-primary leading-tight mb-6">
-              Discover Romania <span className="text-secondary">With Me</span>
-            </h1>
-            <p className="text-lg md:text-xl mb-8 max-w-lg text-gray-700">
-              Explore the hidden gems, breathtaking landscapes, and rich cultural heritage of Romania through my personal journey.
-            </p>
-            
-            <SearchBox value={searchQuery} onChange={onSearchChange} />
-            
-            <TagFilters selectedTagId={selectedTagId} onTagSelect={onTagSelect} />
-          </div>
-          
-          <div className="w-full md:w-1/2 relative ml-auto">
             {isLoading ? (
               <div className="relative rounded-2xl overflow-hidden shadow-2xl bg-gray-200 animate-pulse h-[400px] md:h-[500px]"></div>
             ) : featuredPost ? (
@@ -58,6 +40,16 @@ const HeroSection: React.FC<HeroSectionProps> = ({
                 <p className="text-gray-500">No featured post available</p>
               </div>
             )}
+          </div>
+          
+          <div className="w-full md:w-1/2 relative ml-auto pl-0 md:pl-8 mt-8 md:mt-0">
+            <h2 className="font-display text-2xl font-bold text-primary mb-4">Featured Post</h2>
+            <p className="text-gray-600 mb-6">
+              Discover my handpicked favorite destinations and experiences throughout beautiful Romania.
+            </p>
+            <p className="text-gray-600">
+              Each featured post highlights extraordinary places with detailed guides, insider tips, and breathtaking photography to inspire your Romanian adventure.
+            </p>
           </div>
         </div>
       </div>

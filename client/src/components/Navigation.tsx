@@ -18,20 +18,18 @@ const Navigation: React.FC = () => {
   return (
     <header className="bg-white shadow-sm sticky top-0 z-50">
       <div className="container mx-auto px-4 py-3 flex justify-between items-center">
-        <Logo />
+        <nav className="hidden md:flex space-x-6">
+          {navLinks.map((link) => (
+            <Link key={link.name} href={link.path}>
+              <div className="text-primary hover:text-secondary transition-colors font-semibold cursor-pointer">
+                {link.name}
+              </div>
+            </Link>
+          ))}
+        </nav>
         
         <div className="flex items-center space-x-4">
-          <nav className="hidden md:flex space-x-6">
-            {navLinks.map((link) => (
-              <Link key={link.name} href={link.path}>
-                <a className="text-primary hover:text-secondary transition-colors font-semibold">
-                  {link.name}
-                </a>
-              </Link>
-            ))}
-          </nav>
-          
-          <div className="ml-4">
+          <div className="mr-4">
             <div className="h-10 w-10 rounded-full border-2 border-primary overflow-hidden">
               <svg viewBox="0 0 100 100" className="h-full w-full">
                 <rect x="0" y="0" width="100" height="33.3" fill="#002B7F" />
@@ -40,6 +38,8 @@ const Navigation: React.FC = () => {
               </svg>
             </div>
           </div>
+          
+          <Logo />
           
           <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
             <SheetTrigger asChild>
@@ -51,12 +51,12 @@ const Navigation: React.FC = () => {
               <div className="flex flex-col space-y-4 mt-8">
                 {navLinks.map((link) => (
                   <Link key={link.name} href={link.path}>
-                    <a 
-                      className="text-primary hover:text-secondary transition-colors font-semibold text-lg"
+                    <div 
+                      className="text-primary hover:text-secondary transition-colors font-semibold text-lg cursor-pointer"
                       onClick={() => setIsMenuOpen(false)}
                     >
                       {link.name}
-                    </a>
+                    </div>
                   </Link>
                 ))}
               </div>
