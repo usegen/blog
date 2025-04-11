@@ -47,8 +47,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Filter blog posts by tag
-  app.get("/api/posts/tag/:tagId", async (req, res) => {
+  // Get posts by tag
+  app.get("/api/posts/by-tag/:tagId", async (req, res) => {
     try {
       const tagId = parseInt(req.params.tagId);
       if (isNaN(tagId)) {

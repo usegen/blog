@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import HeroSection from '@/components/HeroSection';
 import SearchAndFilterSection from '@/components/SearchAndFilterSection';
 import BlogPostGrid from '@/components/BlogPostGrid';
 import Newsletter from '@/components/Newsletter';
@@ -26,7 +25,7 @@ const Home: React.FC = () => {
 
   // Fetch posts by tag
   const { data: tagPosts, isLoading: isLoadingTagPosts } = useQuery<BlogPostWithTag[]>({
-    queryKey: ['/api/posts/tag', selectedTagId],
+    queryKey: ['/api/posts/by-tag', selectedTagId],
     enabled: selectedTagId !== null,
   });
 
@@ -51,7 +50,6 @@ const Home: React.FC = () => {
 
   return (
     <>
-      <HeroSection />
       <SearchAndFilterSection 
         searchQuery={searchQuery} 
         onSearchChange={setSearchQuery} 
