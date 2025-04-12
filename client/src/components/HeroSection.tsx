@@ -11,12 +11,14 @@ const HeroSection: React.FC = () => {
     <section className="hero-section relative overflow-hidden">
       <div className="container mx-auto py-16 px-4 md:py-24 lg:py-32">
         <div className="text-center mb-12">
-          <h1 className="font-display font-black text-4xl md:text-5xl lg:text-6xl text-primary leading-tight mb-6">
-            Discover Romania <span className="text-secondary">With Me</span>
-          </h1>
-          <p className="text-lg md:text-xl mb-8 max-w-2xl mx-auto text-gray-700">
-            Explore the hidden gems, breathtaking landscapes, and rich cultural heritage of Romania through my personal journey.
-          </p>
+          <a href="https://instagram.com" className="group inline-flex flex-col items-center gap-4">
+              <h1 className="font-display font-black text-4xl md:text-5xl lg:text-6xl text-primary leading-tight">
+                Follow Me on <span className="text-secondary">Instagram</span>
+              </h1>
+              <div className="text-6xl md:text-7xl lg:text-8xl text-secondary group-hover:scale-110 transition-transform">
+                <i className="fab fa-instagram"></i>
+              </div>
+            </a>
         </div>
         
         <div className="flex flex-col md:flex-row items-center">
