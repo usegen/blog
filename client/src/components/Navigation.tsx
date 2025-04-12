@@ -8,6 +8,17 @@ import { Menu } from "lucide-react";
 const Navigation: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+  const handleScroll = (e: React.MouseEvent<HTMLDivElement>, path: string) => {
+    if (path.includes('#')) {
+      e.preventDefault();
+      const id = path.split('#')[1];
+      const element = document.getElementById(id);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  };
+
   const navLinks = [
     { name: 'Home', path: '/' },
     { name: 'About', path: '/#about' },
@@ -20,7 +31,10 @@ const Navigation: React.FC = () => {
         <nav className="hidden md:flex space-x-6">
           {navLinks.map((link) => (
             <Link key={link.name} href={link.path}>
-              <div className="text-primary hover:text-secondary transition-colors font-semibold cursor-pointer">
+              <div 
+                onClick={(e) => handleScroll(e, link.path)}
+                className="text-primary hover:text-secondary transition-colors font-semibold cursor-pointer"
+              >
                 {link.name}
               </div>
             </Link>
