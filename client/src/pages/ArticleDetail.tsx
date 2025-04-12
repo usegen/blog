@@ -42,14 +42,14 @@ const ArticleDetail: React.FC = () => {
     };
     
     fetchPost();
-  }, [id]);
+  }, [slug]);
   
-  if (isNaN(id)) {
+  if (!slug) {
     return (
       <div className="container mx-auto px-4 py-12">
         <div className="bg-white p-8 rounded-lg shadow-md text-center">
-          <h1 className="text-2xl font-display font-bold text-primary mb-4">Invalid Article ID</h1>
-          <p className="text-gray-600 mb-6">The article ID you're trying to access is invalid.</p>
+          <h1 className="text-2xl font-display font-bold text-primary mb-4">Invalid Article URL</h1>
+          <p className="text-gray-600 mb-6">The article you're trying to access is invalid.</p>
           <Button 
             onClick={() => setLocation('/')}
             className="bg-primary text-white"
