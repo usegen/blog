@@ -17,7 +17,7 @@ const BlogPostGrid: React.FC<BlogPostGridProps> = ({ posts, isLoading }) => {
 
   if (isLoading) {
     return (
-      <section className="container mx-auto py-12 px-4">
+      <section id="articles" className="container mx-auto py-12 px-4">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {[1, 2, 3, 4, 5, 6].map((i) => (
             <div
@@ -32,7 +32,7 @@ const BlogPostGrid: React.FC<BlogPostGridProps> = ({ posts, isLoading }) => {
 
   if (!posts || posts.length === 0) {
     return (
-      <section className="container mx-auto py-12 px-4">
+      <section id="articles" className="container mx-auto py-12 px-4">
         <div className="bg-white rounded-xl p-8 text-center">
           <p className="text-gray-500 text-lg">
             No blog posts found. Please try a different search or tag filter.
@@ -46,7 +46,7 @@ const BlogPostGrid: React.FC<BlogPostGridProps> = ({ posts, isLoading }) => {
   const hasMorePosts = posts.length > visiblePosts;
 
   return (
-    <section className="container mx-auto py-12 px-4">
+    <section id="articles" className="container mx-auto py-12 px-4">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {displayPosts.map((post) => (
           <BlogPostCard key={post.id} post={post} />

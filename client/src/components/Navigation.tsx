@@ -3,7 +3,8 @@ import { Link } from 'wouter';
 import Logo from './ui/Logo';
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { Menu } from "lucide-react";
+import { Menu, X, Instagram } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 const Navigation: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -23,60 +24,70 @@ const Navigation: React.FC = () => {
 
   const navLinks = [
     { name: 'Home', path: '/' },
-    { name: 'About', path: '/#about' },
-    { name: 'Contact', path: '/#contact' },
+    { name: 'About', path: '/#about' }
   ];
 
   return (
     <header className="bg-white shadow-sm sticky top-0 z-50">
-      <div className="container mx-auto px-4 py-3 flex justify-between items-center">
-        <nav className="hidden md:flex space-x-6">
-          {navLinks.map((link) => (
-            <Link key={link.name} href={link.path}>
-              <div 
-                onClick={(e) => handleScroll(e, link.path)}
-                className="text-primary hover:text-secondary transition-colors font-semibold cursor-pointer"
-              >
-                {link.name}
-              </div>
-            </Link>
-          ))}
-        </nav>
-        
-        <div className="flex items-center space-x-4">
-          <div className="mr-4">
-            <div className="h-10 w-10 rounded-full border-2 border-primary overflow-hidden">
-              <svg viewBox="0 0 100 100" className="h-full w-full">
-                <rect x="0" y="0" width="100" height="33.3" fill="#002B7F" />
-                <rect x="0" y="33.3" width="100" height="33.3" fill="#FCD116" />
-                <rect x="0" y="66.6" width="100" height="33.3" fill="#CE1126" />
-              </svg>
-            </div>
-          </div>
-          
+      <div className="container mx-auto px-4 py-3">
+        <div className="flex justify-between items-center">
+          {/* Left side - Logo */}
           <Logo />
           
-          <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
-            <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="md:hidden">
-                <Menu className="h-6 w-6 text-primary" />
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="right">
-              <div className="flex flex-col space-y-4 mt-8">
-                {navLinks.map((link) => (
-                  <Link key={link.name} href={link.path}>
-                    <div 
-                      className="text-primary hover:text-secondary transition-colors font-semibold text-lg cursor-pointer"
-                      onClick={() => setIsMenuOpen(false)}
-                    >
-                      {link.name}
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            </SheetContent>
-          </Sheet>
+          {/* Right side - Navigation and Icons */}
+          <div className="flex items-center gap-6">
+            {/* Desktop Navigation */}
+            <nav className="hidden md:flex space-x-8">
+              {navLinks.map((link) => (
+                <Link key={link.name} href={link.path}>
+                  <div 
+                    onClick={(e) => handleScroll(e, link.path)}
+                    className="text-primary hover:text-primary/80 transition-colors font-semibold cursor-pointer text-lg px-3 py-1.5"
+                  >
+                    {link.name}
+                  </div>
+                </Link>
+              ))}
+            </nav>
+
+            {/* Instagram Link */}
+            <a 
+              href="https://www.instagram.com/ZazitRumunsku" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 text-primary hover:text-primary/80 transition-colors px-3 py-1.5"
+            >
+              <Instagram className="h-6 w-6" />
+              <span className="hidden md:inline font-semibold text-lg">Instagram</span>
+            </a>
+
+            {/* Mobile Menu */}
+            <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
+              <SheetTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="md:hidden text-primary hover:text-primary/80 transition-colors"
+                >
+                  <Menu className="h-5 w-5" />
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="right">
+                <div className="flex flex-col space-y-6 mt-8">
+                  {navLinks.map((link) => (
+                    <Link key={link.name} href={link.path}>
+                      <div 
+                        className="text-primary hover:text-primary/80 transition-colors font-semibold text-xl cursor-pointer px-4 py-2"
+                        onClick={() => setIsMenuOpen(false)}
+                      >
+                        {link.name}
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </SheetContent>
+            </Sheet>
+          </div>
         </div>
       </div>
     </header>

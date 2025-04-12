@@ -2,6 +2,7 @@ import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 import { storage } from "./storage";
+import 'dotenv/config';
 
 const app = express();
 app.use(express.json());
@@ -36,6 +37,8 @@ app.use((req, res, next) => {
 
   next();
 });
+
+console.log('Database URL:', process.env.DATABASE_URL);
 
 (async () => {
   try {
