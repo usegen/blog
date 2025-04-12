@@ -23,7 +23,7 @@ const SearchAndFilterSection: React.FC<SearchAndFilterSectionProps> = ({
             Discover Romania <span className="text-secondary">With Me</span>
           </h1>
           <p className="text-lg md:text-xl mb-10 text-gray-700 max-w-3xl mx-auto">
-            Explore the hidden gems, breathtaking landscapes, and rich cultural heritage of Romania through my personal journey.
+            Find out everything from a Mikulov castle tour guide that moved here years ago.
           </p>
         </div>
         <div className="max-w-3xl mx-auto">
