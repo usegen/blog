@@ -16,20 +16,26 @@ const SearchAndFilterSection: React.FC<SearchAndFilterSectionProps> = ({
   onTagSelect
 }) => {
   const [displayText, setDisplayText] = React.useState('');
+  const [showCursor, setShowCursor] = React.useState(true);
   const fullText = 'Discover Romania With Me';
-  
+
   React.useEffect(() => {
     let currentIndex = 0;
-    const interval = setInterval(() => {
+    const typingInterval = setInterval(() => {
       if (currentIndex <= fullText.length) {
         setDisplayText(fullText.slice(0, currentIndex));
         currentIndex++;
       } else {
-        clearInterval(interval);
+        clearInterval(typingInterval);
+        setTimeout(() => {
+          setShowCursor(false);
+        }, 5000);
       }
     }, 100);
 
-    return () => clearInterval(interval);
+    return () => {
+      if (typingInterval) clearInterval(typingInterval);
+    };
   }, []);
 
   return (
@@ -38,7 +44,7 @@ const SearchAndFilterSection: React.FC<SearchAndFilterSectionProps> = ({
         <div className="max-w-4xl mx-auto text-center mb-10">
           <h1 className="font-display font-black text-4xl md:text-5xl lg:text-6xl text-primary leading-tight mb-6">
             <span>{displayText}</span>
-            <span className="animate-blink">|</span>
+            {showCursor && <span className="animate-blink">|</span>}
           </h1>
           <p className="text-lg md:text-xl mb-10 text-gray-700 max-w-3xl mx-auto">
             Find out everything from a Mikulov castle tour guide that moved here years ago.
