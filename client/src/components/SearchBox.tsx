@@ -8,13 +8,13 @@ interface SearchBoxProps {
 
 const SearchBox: React.FC<SearchBoxProps> = ({ value, onChange }) => {
   return (
-    <div className="w-full mx-auto mb-6 transition-all duration-300 rounded-full overflow-hidden bg-white shadow-lg border border-gray-200 focus-within:shadow-md focus-within:border-primary focus-within:ring-2 focus-within:ring-primary focus-within:ring-opacity-20">
-      <div className="flex items-center px-4 py-3">
-        <i className="fas fa-search text-gray-400 mr-3"></i>
+    <div className="w-full max-w-4xl mx-auto mb-8 transition-all duration-300 rounded-full overflow-hidden bg-white shadow-xl border-2 border-gray-200 focus-within:shadow-2xl focus-within:border-primary focus-within:ring-2 focus-within:ring-primary focus-within:ring-opacity-20">
+      <div className="flex items-center px-6 py-4">
+        <i className="fas fa-search text-gray-400 mr-4 text-xl"></i>
         <Input 
           type="text" 
-          placeholder="Search for destinations, activities, or stories..." 
-          className="w-full border-0 outline-none bg-transparent text-gray-800 focus-visible:ring-0 focus-visible:ring-offset-0 p-0"
+          placeholder="What attracts you to Romania?" 
+          className="w-full border-0 outline-none bg-transparent text-gray-800 focus-visible:ring-0 focus-visible:ring-offset-0 p-0 text-lg"
           value={value}
           onChange={(e) => onChange(e.target.value)}
         />
