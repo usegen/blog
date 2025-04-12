@@ -9,7 +9,9 @@ const Navigation: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const handleScroll = (e: React.MouseEvent<HTMLDivElement>, path: string) => {
-    if (path.includes('#')) {
+    if (path === '/') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else if (path.includes('#')) {
       e.preventDefault();
       const id = path.split('#')[1];
       const element = document.getElementById(id);
