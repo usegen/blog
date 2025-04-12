@@ -10,7 +10,6 @@ const Navigation: React.FC = () => {
 
   const navLinks = [
     { name: 'Home', path: '/' },
-    { name: 'Destinations', path: '/destinations' },
     { name: 'About', path: '/about' },
     { name: 'Contact', path: '/contact' },
   ];
