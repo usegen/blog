@@ -29,7 +29,7 @@ const SearchAndFilterSection: React.FC<SearchAndFilterSectionProps> = ({
         clearInterval(typingInterval);
         setTimeout(() => {
           setShowCursor(false);
-        }, 5000);
+        }, 3000);
       }
     }, 100);
 
