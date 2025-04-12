@@ -42,7 +42,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       return res.json([]);
     }
 
-    const allPosts = await storage.getAllPosts();
+    const allPosts = await storage.getAllBlogPosts();
     const posts = allPosts.filter(post => {
       const title = post.title.toLowerCase();
       const content = post.content.toLowerCase();
