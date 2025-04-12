@@ -42,7 +42,7 @@ const SearchAndFilterSection: React.FC<SearchAndFilterSectionProps> = ({
     <section className="search-filter-section bg-gradient-to-b from-white to-gray-50 py-16 md:py-24 border-b border-gray-100">
       <div className="container mx-auto px-4">
         <div className="max-w-4xl mx-auto text-center mb-10">
-          <h1 className="font-display font-black text-4xl md:text-5xl lg:text-6xl text-primary leading-tight mb-6">
+          <h1 className="font-display font-black text-5xl md:text-6xl lg:text-7xl text-primary leading-tight mb-6">
             <span>{displayText}</span>
             {showCursor && <span className="animate-blink">|</span>}
           </h1>
