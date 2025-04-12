@@ -37,14 +37,28 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Search blog posts
   app.get("/api/posts/search", async (req, res) => {
-    try {
-      const query = (req.query.q as string) || "";
-      const posts = await storage.searchBlogPosts(query);
-      res.json(posts);
-    } catch (error) {
-      console.error("Error searching blog posts:", error);
-      res.status(500).json({ message: "Failed to search blog posts" });
+    const query = req.query.q?.toString().toLowerCase() || '';
+    if (!query) {
+      return res.json([]);
     }
+
+    const allPosts = await storage.getAllPosts();
+    const posts = allPosts.filter(post => {
+      const title = post.title.toLowerCase();
+      const content = post.content.toLowerCase();
+      // Fuzzy search - check if query characters appear in sequence
+      const fuzzyMatch = (str: string) => {
+        let i = 0;
+        for (const char of query) {
+          i = str.indexOf(char, i);
+          if (i === -1) return false;
+          i++;
+        }
+        return true;
+      };
+      return fuzzyMatch(title) || content.includes(query);
+    });
+    res.json(posts);
   });
 
   // Get posts by tag
@@ -62,7 +76,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ message: "Failed to filter blog posts by tag" });
     }
   });
-  
+
   // Get a single blog post by ID - this must come after all other specific post routes
   app.get("/api/posts/:id", async (req, res) => {
     try {
