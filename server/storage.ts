@@ -15,6 +15,7 @@ export interface IStorage {
   getAllTags(): Promise<Tag[]>;
   getTagById(id: number): Promise<Tag | undefined>;
   createTag(tag: InsertTag): Promise<Tag>;
+  deleteTag(id: number): Promise<void>;
   
   // Blog post methods
   getAllBlogPosts(): Promise<BlogPostWithTag[]>;
@@ -22,6 +23,7 @@ export interface IStorage {
   getBlogPostsByTagId(tagId: number): Promise<BlogPostWithTag[]>;
   searchBlogPosts(query: string): Promise<BlogPostWithTag[]>;
   createBlogPost(post: InsertBlogPost): Promise<BlogPost>;
+  deleteBlogPost(id: number): Promise<void>;
   getFeaturedBlogPost(): Promise<BlogPostWithTag | undefined>;
 }
 
@@ -77,6 +79,10 @@ export class MemStorage implements IStorage {
     const newTag: Tag = { ...tag, id };
     this.tags.set(id, newTag);
     return newTag;
+  }
+  
+  async deleteTag(id: number): Promise<void> {
+    this.tags.delete(id);
   }
   
   // Blog post methods
@@ -139,6 +145,10 @@ export class MemStorage implements IStorage {
     const newPost: BlogPost = { ...post, id };
     this.blogPosts.set(id, newPost);
     return newPost;
+  }
+  
+  async deleteBlogPost(id: number): Promise<void> {
+    this.blogPosts.delete(id);
   }
   
   async getFeaturedBlogPost(): Promise<BlogPostWithTag | undefined> {
@@ -277,6 +287,10 @@ export class DatabaseStorage implements IStorage {
     return newTag;
   }
   
+  async deleteTag(id: number): Promise<void> {
+    await db.delete(tags).where(eq(tags.id, id));
+  }
+  
   // Blog post methods
   async getAllBlogPosts(): Promise<BlogPostWithTag[]> {
     const posts = await db.select().from(blogPosts).orderBy(desc(blogPosts.date));
@@ -367,6 +381,10 @@ export class DatabaseStorage implements IStorage {
   async createBlogPost(post: InsertBlogPost): Promise<BlogPost> {
     const [newPost] = await db.insert(blogPosts).values(post).returning();
     return newPost;
+  }
+  
+  async deleteBlogPost(id: number): Promise<void> {
+    await db.delete(blogPosts).where(eq(blogPosts.id, id));
   }
   
   async getFeaturedBlogPost(): Promise<BlogPostWithTag | undefined> {

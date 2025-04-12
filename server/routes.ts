@@ -1,16 +1,11 @@
-import type { Express } from "express";
-import { createServer, type Server } from "http";
+import type { Router } from "express";
 import { storage } from "./storage";
 import { ZodError } from "zod";
-import { z } from "zod";
-import { insertBlogPostSchema } from "@shared/schema";
+import { insertBlogPostSchema, insertTagSchema } from "@shared/schema";
 
-export async function registerRoutes(app: Express): Promise<Server> {
-  // put application routes here
-  // prefix all routes with /api
-
+export async function registerRoutes(router: Router): Promise<void> {
   // Get all blog posts
-  app.get("/api/posts", async (req, res) => {
+  router.get("/posts", async (req, res) => {
     try {
       const posts = await storage.getAllBlogPosts();
       res.json(posts);
@@ -20,23 +15,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Get featured blog post - this must come before the ":id" route to prevent conflicts
-  app.get("/api/posts/featured", async (req, res) => {
-    try {
-      const featuredPost = await storage.getFeaturedBlogPost();
-      if (!featuredPost) {
-        return res.status(404).json({ message: "No featured post found" });
-      }
-
-      res.json(featuredPost);
-    } catch (error) {
-      console.error("Error fetching featured post:", error);
-      res.status(500).json({ message: "Failed to fetch featured post" });
-    }
-  });
-
   // Search blog posts
-  app.get("/api/posts/search", async (req, res) => {
+  router.get("/posts/search", async (req, res) => {
     const query = req.query.q?.toString().toLowerCase() || '';
     if (!query) {
       return res.json([]);
@@ -62,7 +42,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Get posts by tag
-  app.get("/api/posts/by-tag/:tagId", async (req, res) => {
+  router.get("/posts/by-tag/:tagId", async (req, res) => {
     try {
       const tagId = parseInt(req.params.tagId);
       if (isNaN(tagId)) {
@@ -78,7 +58,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Get a single blog post by slug
-  app.get("/api/posts/by-slug/:slug", async (req, res) => {
+  router.get("/posts/by-slug/:slug", async (req, res) => {
     try {
       const { slug } = req.params;
       const post = await storage.getBlogPostBySlug(slug);
@@ -93,7 +73,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Get all tags
-  app.get("/api/tags", async (req, res) => {
+  router.get("/tags", async (req, res) => {
     try {
       const tags = await storage.getAllTags();
       res.json(tags);
@@ -103,8 +83,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Create a new blog post (for admin functionality)
-  app.post("/api/posts", async (req, res) => {
+  // Create a new blog post
+  router.post("/posts-create", async (req, res) => {
     try {
       const postData = insertBlogPostSchema.parse(req.body);
       const newPost = await storage.createBlogPost(postData);
@@ -121,7 +101,64 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  const httpServer = createServer(app);
+  // Delete a blog post
+  router.delete("/posts/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid post ID" });
+      }
 
-  return httpServer;
+      const post = await storage.getBlogPostById(id);
+      if (!post) {
+        return res.status(404).json({ message: "Post not found" });
+      }
+
+      await storage.deleteBlogPost(id);
+      res.status(204).send();
+    } catch (error) {
+      console.error("Error deleting blog post:", error);
+      res.status(500).json({ message: "Failed to delete blog post" });
+    }
+  });
+
+  // Create a new tag
+  router.post("/tags-create", async (req, res) => {
+    try {
+      const tagData = insertTagSchema.parse(req.body);
+      console.log('Creating tag:', tagData);
+      const newTag = await storage.createTag(tagData);
+      res.status(201).json(newTag);
+    } catch (error) {
+      if (error instanceof ZodError) {
+        return res.status(400).json({ 
+          message: "Invalid tag data", 
+          errors: error.errors 
+        });
+      }
+      console.error("Error creating tag:", error);
+      res.status(500).json({ message: "Failed to create tag" });
+    }
+  });
+
+  // Delete a tag
+  router.delete("/tags/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid tag ID" });
+      }
+
+      const tag = await storage.getTagById(id);
+      if (!tag) {
+        return res.status(404).json({ message: "Tag not found" });
+      }
+
+      await storage.deleteTag(id);
+      res.status(204).send();
+    } catch (error) {
+      console.error("Error deleting tag:", error);
+      res.status(500).json({ message: "Failed to delete tag" });
+    }
+  });
 }
