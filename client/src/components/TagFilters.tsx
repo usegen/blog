@@ -42,7 +42,7 @@ const TagFilters: React.FC<TagFiltersProps> = ({ selectedTagIds, onTagSelect }) 
             <Button
               key={tag.id}
               variant="outline"
-              className={`tag-pill whitespace-nowrap px-4 py-2 rounded-full border border-primary font-semibold text-sm transition-colors duration-200 shadow-sm hover:shadow-md ${
+              className={`tag-pill whitespace-nowrap px-6 py-3 rounded-full border-2 border-primary font-semibold text-base transition-colors duration-200 shadow-md hover:shadow-lg ${
                 isSelected 
                   ? 'bg-primary text-white hover:bg-primary/90' 
                   : 'bg-white text-primary hover:bg-primary hover:text-white'
