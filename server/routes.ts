@@ -77,19 +77,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Get a single blog post by ID - this must come after all other specific post routes
-  app.get("/api/posts/:id", async (req, res) => {
+  // Get a single blog post by slug
+  app.get("/api/posts/by-slug/:slug", async (req, res) => {
     try {
-      const id = parseInt(req.params.id);
-      if (isNaN(id)) {
-        return res.status(400).json({ message: "Invalid post ID" });
-      }
-
-      const post = await storage.getBlogPostById(id);
+      const { slug } = req.params;
+      const post = await storage.getBlogPostBySlug(slug);
       if (!post) {
         return res.status(404).json({ message: "Post not found" });
       }
-
       res.json(post);
     } catch (error) {
       console.error("Error fetching blog post:", error);

@@ -7,16 +7,16 @@ import { ArrowLeft } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 
 const ArticleDetail: React.FC = () => {
-  const params = useParams<{ id: string }>();
+  const params = useParams<{ slug: string }>();
   const [, setLocation] = useLocation();
-  const id = parseInt(params.id);
+  const { slug } = params;
   
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<boolean>(false);
   const [post, setPost] = useState<BlogPostWithTag | null>(null);
   
   useEffect(() => {
-    if (isNaN(id)) {
+    if (!slug) {
       setLoading(false);
       setError(true);
       return;
@@ -25,7 +25,7 @@ const ArticleDetail: React.FC = () => {
     const fetchPost = async () => {
       setLoading(true);
       try {
-        const response = await fetch(`/api/posts/${id}`);
+        const response = await fetch(`/api/posts/by-slug/${slug}`);
         if (!response.ok) {
           throw new Error(`Error fetching post: ${response.status}`);
         }
