@@ -36,20 +36,20 @@ const TagFilters: React.FC<TagFiltersProps> = ({ selectedTagIds, onTagSelect }) 
   }
 
   return (
-    <div className="flex flex-wrap gap-2 md:gap-3">
+    <div className="flex flex-wrap justify-center gap-3 md:gap-4">
       {tags.map((tag) => (
         <Badge
           key={tag.id}
           variant={selectedTagIds.includes(tag.id) ? "default" : "outline"}
           className={cn(
-            "cursor-pointer px-3 py-1 text-sm md:text-base transition-colors",
+            "cursor-pointer px-4 py-2 text-base md:text-lg transition-colors",
             selectedTagIds.includes(tag.id)
               ? "bg-primary text-white hover:bg-primary/90"
               : "border-primary text-primary hover:bg-primary/10"
           )}
           onClick={() => handleTagClick(tag.id)}
         >
-          <span className="mr-1"><i className={`fas ${tag.icon}`}></i></span>
+          <span className="mr-2"><i className={`fas ${tag.icon}`}></i></span>
           {tag.name}
         </Badge>
       ))}

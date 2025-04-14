@@ -24,7 +24,6 @@ const Navigation: React.FC = () => {
 
   const navLinks = [
     { name: 'About', path: '/#about' },
-    { name: 'Admin', path: '/admin' }
   ];
 
   return (

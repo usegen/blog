@@ -89,25 +89,6 @@ const Home: React.FC = () => {
           </p>
         </div>
       </section>
-
-      <section id="contact" className="py-16">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-primary mb-8">Contact</h2>
-          <p className="text-lg text-gray-600 mb-8">
-            Want to connect? Follow me on social media or reach out directly!
-          </p>
-          <div className="flex justify-center space-x-6">
-            <a 
-              href="https://www.instagram.com/zazitrumunsko/" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="text-4xl text-primary hover:text-secondary transition-colors"
-            >
-              <i className="fab fa-instagram"></i>
-            </a>
-          </div>
-        </div>
-      </section>
       
       <Newsletter />
     </>

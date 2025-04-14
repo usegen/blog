@@ -1,6 +1,8 @@
 import { tags, type Tag, type InsertTag, blogPosts, type BlogPost, type InsertBlogPost, type BlogPostWithTag, users, type User, type InsertUser } from "@shared/schema";
 import { db } from "./db";
 import { eq, like, or, desc } from "drizzle-orm";
+import { slugify } from "slugify";
+import { IBlogPost, IStorage, IUser, IComment, ITag } from './types';
 
 // modify the interface with any CRUD methods
 // you might need
@@ -15,6 +17,7 @@ export interface IStorage {
   getAllTags(): Promise<Tag[]>;
   getTagById(id: number): Promise<Tag | undefined>;
   createTag(tag: InsertTag): Promise<Tag>;
+  updateTag(id: number, tag: InsertTag): Promise<Tag>;
   deleteTag(id: number): Promise<void>;
   
   // Blog post methods
@@ -25,6 +28,7 @@ export interface IStorage {
   createBlogPost(post: InsertBlogPost): Promise<BlogPost>;
   deleteBlogPost(id: number): Promise<void>;
   getFeaturedBlogPost(): Promise<BlogPostWithTag | undefined>;
+  updateBlogPost(id: number, post: InsertBlogPost): Promise<BlogPost>;
 }
 
 export class MemStorage implements IStorage {
@@ -79,6 +83,17 @@ export class MemStorage implements IStorage {
     const newTag: Tag = { ...tag, id };
     this.tags.set(id, newTag);
     return newTag;
+  }
+  
+  async updateTag(id: number, tagData: InsertTag): Promise<Tag> {
+    const existingTag = this.tags.get(id);
+    if (!existingTag) {
+      throw new Error(`Tag with id ${id} not found`);
+    }
+    
+    const updatedTag: Tag = { ...existingTag, ...tagData };
+    this.tags.set(id, updatedTag);
+    return updatedTag;
   }
   
   async deleteTag(id: number): Promise<void> {
@@ -162,6 +177,23 @@ export class MemStorage implements IStorage {
     }
     
     return { ...featuredPost, tag };
+  }
+  
+  async updateBlogPost(id: number, postData: InsertBlogPost): Promise<BlogPost> {
+    const existingPost = this.blogPosts.get(id);
+    if (!existingPost) {
+      throw new Error(`Blog post with id ${id} not found`);
+    }
+    
+    const updatedPost: BlogPost = { 
+      ...existingPost, 
+      ...postData,
+      featured: postData.featured ?? existingPost.featured,
+      tagId: postData.tagId ?? existingPost.tagId,
+      slug: postData.slug ?? existingPost.slug
+    };
+    this.blogPosts.set(id, updatedPost);
+    return updatedPost;
   }
   
   // Initialize with sample data
@@ -287,6 +319,20 @@ export class DatabaseStorage implements IStorage {
     return newTag;
   }
   
+  async updateTag(id: number, tagData: InsertTag): Promise<Tag> {
+    const [updatedTag] = await db
+      .update(tags)
+      .set(tagData)
+      .where(eq(tags.id, id))
+      .returning();
+      
+    if (!updatedTag) {
+      throw new Error(`Tag with id ${id} not found`);
+    }
+    
+    return updatedTag;
+  }
+  
   async deleteTag(id: number): Promise<void> {
     await db.delete(tags).where(eq(tags.id, id));
   }
@@ -379,7 +425,16 @@ export class DatabaseStorage implements IStorage {
   }
   
   async createBlogPost(post: InsertBlogPost): Promise<BlogPost> {
-    const [newPost] = await db.insert(blogPosts).values(post).returning();
+    const slug = post.slug || slugify(post.title);
+    const [newPost] = await db
+      .insert(blogPosts)
+      .values({
+        ...post,
+        slug,
+        featured: post.featured ?? false,
+        tagId: post.tagId ?? null
+      })
+      .returning();
     return newPost;
   }
   
@@ -403,6 +458,25 @@ export class DatabaseStorage implements IStorage {
       ...post,
       tag
     };
+  }
+  
+  async updateBlogPost(id: number, postData: InsertBlogPost): Promise<BlogPost> {
+    const [updatedPost] = await db
+      .update(blogPosts)
+      .set({
+        ...postData,
+        featured: postData.featured ?? undefined,
+        tagId: postData.tagId ?? undefined,
+        slug: postData.slug ?? undefined
+      })
+      .where(eq(blogPosts.id, id))
+      .returning();
+      
+    if (!updatedPost) {
+      throw new Error(`Blog post with id ${id} not found`);
+    }
+    
+    return updatedPost;
   }
   
   // Method to seed the database with initial data

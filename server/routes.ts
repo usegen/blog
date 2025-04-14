@@ -161,4 +161,61 @@ export async function registerRoutes(router: Router): Promise<void> {
       res.status(500).json({ message: "Failed to delete tag" });
     }
   });
+
+  // Update a tag
+  router.put("/tags/:id", async (req, res) => {
+    try {
+      console.log('Creating tag:', req);
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid tag ID" });
+      }
+
+      const tag = await storage.getTagById(id);
+      if (!tag) {
+        return res.status(404).json({ message: "Tag not found" });
+      }
+
+      const tagData = insertTagSchema.parse(req.body);
+      const updatedTag = await storage.updateTag(id, tagData);
+      res.json(updatedTag);
+    } catch (error) {
+      if (error instanceof ZodError) {
+        return res.status(400).json({ 
+          message: "Invalid tag data", 
+          errors: error.errors 
+        });
+      }
+      console.error("Error updating tag:", error);
+      res.status(500).json({ message: "Failed to update tag" });
+    }
+  });
+
+  // Update a blog post
+  router.put("/posts/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid post ID" });
+      }
+
+      const post = await storage.getBlogPostById(id);
+      if (!post) {
+        return res.status(404).json({ message: "Post not found" });
+      }
+
+      const postData = insertBlogPostSchema.parse(req.body);
+      const updatedPost = await storage.updateBlogPost(id, postData);
+      res.json(updatedPost);
+    } catch (error) {
+      if (error instanceof ZodError) {
+        return res.status(400).json({ 
+          message: "Invalid blog post data", 
+          errors: error.errors 
+        });
+      }
+      console.error("Error updating blog post:", error);
+      res.status(500).json({ message: "Failed to update blog post" });
+    }
+  });
 }

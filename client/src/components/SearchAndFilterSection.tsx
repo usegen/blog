@@ -61,7 +61,7 @@ const SearchAndFilterSection: React.FC<SearchAndFilterSectionProps> = ({
             A Mikulov castle tour guide that moved here years ago.
           </p>
         </div>
-        <div className="max-w-3xl mx-auto" ref={searchRef}>
+        <div className="w-full" ref={searchRef}>
           <SearchBox value={searchQuery} onChange={onSearchChange} onFocus={scrollToSearch} />
           
           {/* Mobile Accordion for Tags */}
