@@ -1,7 +1,7 @@
 import { tags, type Tag, type InsertTag, blogPosts, type BlogPost, type InsertBlogPost, type BlogPostWithTag, users, type User, type InsertUser } from "@shared/schema";
 import { db } from "./db";
 import { eq, like, or, desc } from "drizzle-orm";
-import { slugify } from "slugify";
+import  slugify from "slugify";
 import { IBlogPost, IStorage, IUser, IComment, ITag } from './types';
 
 // modify the interface with any CRUD methods
